@@ -1,10 +1,12 @@
 package com.mhj.absence.ui.controller;
 
+import com.mhj.absence.service.impl.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/")
 @Api(value = "Users", description = "Users API entry point")
 public class UserController {
+
+    @Autowired
+    UserService userService;
 
     @ApiOperation(value = "Get all users in the system,This ")
     @ApiResponses(value = {@ApiResponse(code = 100, message = "Bad Request"),

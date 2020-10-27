@@ -23,9 +23,11 @@ import java.util.Date;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final SecurityConstants securityConstants;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
+        this.securityConstants = securityConstants;
     }
 
     @Override
@@ -58,13 +60,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = Jwts.builder()
                 .setSubject(userName)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret() )
+                .setExpiration(new Date(System.currentTimeMillis() + this.securityConstants.getEXPIRATION_TIME()))
+                .signWith(SignatureAlgorithm.HS512, this.securityConstants.getTokenSecret())
                 .compact();
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
         UserDto userDto = userService.getUser(userName);
 
-        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        res.addHeader(this.securityConstants.getHEADER_STRING(), this.securityConstants.getTOKEN_PREFIX() + token);
         res.addHeader("UserID", userDto.getUserId());
 
     }
